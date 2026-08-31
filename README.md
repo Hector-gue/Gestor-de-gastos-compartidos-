@@ -4,11 +4,11 @@ Este programa permite registrar los gastos de cada integrante, indicando quien y
 
 #Algoritmo
 
-Entradas
+Entradas  
 
-personas - cadena
-gasto - numero_decimal
-opción - numero_entero
+personas - cadena  
+gasto - numero_decimal  
+opción - numero_entero  
 
 Proceso
 
@@ -40,6 +40,6 @@ Proceso
 
 Salidas
 
-balance – numero_decimal
-archivo de texto
+balance – numero_decimal  
+archivo de texto  
 
