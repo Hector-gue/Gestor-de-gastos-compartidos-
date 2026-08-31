@@ -4,13 +4,13 @@ Este programa permite registrar los gastos de cada integrante, indicando quien y
 
 #Algoritmo
 
-Entradas  
+**Entradas**  
 
 personas - cadena  
 gasto - numero_decimal  
 opción - numero_entero  
 
-Proceso
+**Proceso**
 
 1.	INICIO
 2.	DEFINIR gastos 
@@ -38,7 +38,7 @@ Proceso
 7.4.	PEDIR opción
 8.	FIN
 
-Salidas
+**Salidas**
 
 balance – numero_decimal  
 archivo de texto  
