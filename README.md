@@ -21,21 +21,21 @@ opción - numero_entero
 5.	MOSTRAR menú (1. Registrar gasto 2. Guardar/consultar historial 3. Salir)  
 6.	PEDIR opción  
 7.	MIENTRAS opción != 3  
-7.1.	SI opción = 1  
-7.1.1.	PEDIR quien_pagó, monto_total, participantes  
-7.1.2.	Dividir monto_total / cantidad_de_participantes  
-7.1.3.	GUARDAR en monto_individual  
-7.1.4.	PARA CADA persona   
-7.1.4.1.	RESTAR balance(persona) - monto_individual  
-7.1.4.2.	GUARDAR en balance(persona)  
-7.1.5.	SUMAR balance(quien_pagó) + monto_total  
-7.1.6.	GUARDAR en balance(quien_pagó)  
-7.1.7.	AGREGAR gasto a gastos  
-7.2.	SI opción = 2  
-7.2.1.	MOSTRAR gastos  
-7.2.2.	GUARDAR o LEER gastos en archivo de texto  
-7.3.	MOSTRAR menú   
-7.4.	PEDIR opción   
+  7.1.	SI opción = 1  
+    7.1.1.	PEDIR quien_pagó, monto_total, participantes  
+    7.1.2.	Dividir monto_total / cantidad_de_participantes  
+    7.1.3.	GUARDAR en monto_individual  
+    7.1.4.	PARA CADA persona   
+      7.1.4.1.	RESTAR balance(persona) - monto_individual  
+      7.1.4.2.	GUARDAR en balance(persona)  
+    7.1.5.	SUMAR balance(quien_pagó) + monto_total  
+    7.1.6.	GUARDAR en balance(quien_pagó)  
+    7.1.7.	AGREGAR gasto a gastos  
+  7.2.	SI opción = 2  
+    7.2.1.	MOSTRAR gastos  
+    7.2.2.	GUARDAR o LEER gastos en archivo de texto  
+  7.3.	MOSTRAR menú   
+  7.4.	PEDIR opción   
 8.	FIN   
 
 **Salidas**
