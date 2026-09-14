@@ -26,8 +26,8 @@ opción - numero_entero
       7.1.2.	Dividir monto_total / cantidad_de_participantes  
       7.1.3.	GUARDAR en monto_individual  
       7.1.4.	PARA CADA persona   
-        7.1.4.1.	RESTAR balance(persona) - monto_individual  
-        7.1.4.2.	GUARDAR en balance(persona)  
+       - 7.1.4.1.	RESTAR balance(persona) - monto_individual
+       - 7.1.4.2.	GUARDAR en balance(persona)  
       7.1.5.	SUMAR balance(quien_pagó) + monto_total  
       7.1.6.	GUARDAR en balance(quien_pagó)  
       7.1.7.	AGREGAR gasto a gastos  
