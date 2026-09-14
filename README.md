@@ -16,8 +16,8 @@ opción - numero_entero
 2.	DEFINIR gastos  
 3.	PEDIR personas al usuario  
 4.	DEFINIR balances  
-4.1.	PARA CADA persona   
-4.2.	balance = 0   
+  4.1.	PARA CADA persona   
+  4.2.	balance = 0   
 5.	MOSTRAR menú (1. Registrar gasto 2. Guardar/consultar historial 3. Salir)  
 6.	PEDIR opción  
 7.	MIENTRAS opción != 3  
