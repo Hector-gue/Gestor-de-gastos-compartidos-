@@ -23,11 +23,19 @@ def calcular_balance_persona_que_pago(monto_total, monto_individual):
 
 def pedir_monto_total():
     #Pregunta por la cantidad de dinero que pagaron.
-    return float(input("Ingrese el monto total del gasto: "))
+    monto_total = float(input("Ingrese el monto total del gasto: "))
+    while monto_total <= 0:
+         print("El monto debe ser mayor a 0")
+         monto_total = float(input("Ingrese el monto total del gasto: "))
+    return monto_total
 
 def pedir_participantes():
     #Pregunta por cuantas personas estuvieron involucradas en el gasto.
-    return int(input("Ingrese la cantidad de participantes: "))
+    cantidad_de_participantes = int(input("Ingrese la cantidad de participantes: "))
+    while cantidad_de_participantes < 2:
+        print("La cantidad de personas debe ser mayor a 2")
+        cantidad_de_participantes = int(input("Ingrese la cantidad de participantes: "))
+    return cantidad_de_participantes
 
 def quien_pago(): #Despues agregare una lista para asignar los balances a cada persona en especifico.
     #Pide que se escriba el nombre de quien pago.
@@ -65,5 +73,3 @@ while not salir:
         print("Saliendo del programa")
     else:
         print("Opcion no valida, intente de nuevo")
-
-
