@@ -1,75 +1,144 @@
-#El programa es un gestor de gastos entre 2 o mas personas. 
+#El programa es un gestor de gastos entre 2 o mas personas.
+ 
 def mostrar_menu():
-    #Muestra un menu que le permite al usuario elegir al usuario
-    print("1. - Registrar gasto") 
-    print("2. - Salir") 
-    opcion =(input("Ingrese una opción: "))
+    #Muestra un menu que le permite al usuario elegir una opcion.
+    print("\n1. - Registrar gasto")
+    print("2. - Ver balances")
+    print("3. - Ver historial de gastos")
+    print("4. - Salir")
+    opcion = input("Ingrese una opción: ")
     return opcion
-
+ 
 def calcular_monto_individual(monto_total, cantidad_de_participantes):
-    #Define cuanto le corresponde pagar a cada persona, divide el monto total entre la cantidad de personas que hicieron el gasto.
+    #Define cuanto le corresponde pagar a cada persona.
     monto_individual = monto_total / cantidad_de_participantes
     return monto_individual
-
+ 
 def calcular_balance_persona(balance_persona, monto_individual):
-    #Es el balance que tiene una persona que no hizo el pago inicial, el balance de cada persona es 0 al iniciar.
+    #Balance de una persona que NO hizo el pago inicial.
     balance_persona = balance_persona - monto_individual
     return balance_persona
-
-def calcular_balance_persona_que_pago(monto_total, monto_individual):
-    #Es el balance que tiene la persona que hizo el gasto inicial. 
-    balance_persona_que_pago = monto_total - monto_individual
-    return balance_persona_que_pago
-
+ 
+def calcular_balance_persona_que_pago(balance_persona, monto_total, monto_individual):
+    #Balance de la persona que hizo el pago inicial, tambien le toca su parte.
+    balance_persona = balance_persona + monto_total - monto_individual
+    return balance_persona
+ 
 def pedir_monto_total():
     #Pregunta por la cantidad de dinero que pagaron.
     monto_total = float(input("Ingrese el monto total del gasto: "))
     while monto_total <= 0:
-         print("El monto debe ser mayor a 0")
-         monto_total = float(input("Ingrese el monto total del gasto: "))
+        print("El monto debe ser mayor a 0")
+        monto_total = float(input("Ingrese el monto total del gasto: "))
     return monto_total
-
+ 
 def pedir_participantes():
-    #Pregunta por cuantas personas estuvieron involucradas en el gasto.
+    #Pregunta cuantas personas participaron y guarda sus nombres en una lista.
     cantidad_de_participantes = int(input("Ingrese la cantidad de participantes: "))
     while cantidad_de_participantes < 2:
-        print("La cantidad de personas debe ser mayor a 2")
+        print("La cantidad de personas debe ser de al menos 2")
         cantidad_de_participantes = int(input("Ingrese la cantidad de participantes: "))
-    return cantidad_de_participantes
-
-def quien_pago(): #Despues agregare una lista para asignar los balances a cada persona en especifico.
-    #Pide que se escriba el nombre de quien pago.
-    return input("Quién pago? ")
-
-def acumular_gastos(total_gastado,cantidad_gastos,monto_total):
-    #Suma los gastos y los muestra.
-    total_gastado = total_gastado + monto_total
-    cantidad_gastos = cantidad_gastos + 1
-    return total_gastado,cantidad_gastos
-
+ 
+    participantes = []
+    while len(participantes) < cantidad_de_participantes:
+        nombre = input("Nombre del participante " + str(len(participantes) + 1) + ": ")
+        if nombre == "":
+            print("El nombre no puede estar vacío")
+        elif nombre in participantes:
+            print("Ese nombre ya fue ingresado en este gasto")
+        else:
+            participantes.append(nombre)
+    return participantes
+ 
+def quien_pago(participantes):
+    #Pide el nombre de quien pago; debe estar dentro de la lista de participantes.
+    pagador = input("Quién pagó? ")
+    while pagador not in participantes:
+        print("Esa persona no está entre los participantes:", participantes)
+        pagador = input("Quién pagó? ")
+    return pagador
+ 
+def obtener_indice_persona(nombres, balances, nombre):
+    #Busca a la persona en la lista de nombres. Si es nueva, la agrega con balance 0.
+    if nombre not in nombres:
+        nombres.append(nombre)
+        balances.append(0)
+    return nombres.index(nombre)
+ 
+def actualizar_balances(nombres, balances, participantes, pagador, monto_total, monto_individual):
+    #Recorre a los participantes y actualiza el balance de cada uno en la lista.
+    for persona in participantes:
+        i = obtener_indice_persona(nombres, balances, persona)
+        if persona == pagador:
+            balances[i] = calcular_balance_persona_que_pago(balances[i], monto_total, monto_individual)
+        else:
+            balances[i] = calcular_balance_persona(balances[i], monto_individual)
+ 
+def acumular_gastos(montos_gastos, pagadores_gastos, monto_total, pagador):
+    #Guarda el gasto en las listas del historial.
+    montos_gastos.append(monto_total)
+    pagadores_gastos.append(pagador)
+ 
+def redondear_a_2_decimales(valor):
+    #Deja el numero con 2 decimales.
+    return int(valor * 100 + 0.5) / 100
+ 
+def mostrar_balances(nombres, balances):
+    #Muestra el balance de cada persona registrada.
+    if len(nombres) == 0:
+        print("Todavía no hay personas registradas.")
+        return
+    print("\n--- Balances ---")
+    for i in range(len(nombres)):
+        if balances[i] > 0:
+            print(nombres[i], ": le deben $", redondear_a_2_decimales(balances[i]))
+        elif balances[i] < 0:
+            print(nombres[i], ": debe $", redondear_a_2_decimales(-balances[i]))
+        else:
+            print(nombres[i], ": está a mano")
+ 
+def mostrar_historial(montos_gastos, pagadores_gastos):
+    #Muestra todos los gastos registrados.
+    if len(montos_gastos) == 0:
+        print("Todavía no hay gastos registrados.")
+        return
+    print("\n--- Historial de gastos ---")
+    for i in range(len(montos_gastos)):
+        print("Gasto", i + 1, "- Pagó:", pagadores_gastos[i], "- Monto: $", montos_gastos[i])
+    print("Cantidad de gastos:", len(montos_gastos))
+    print("Gasto total acumulado: $", sum(montos_gastos))
+ 
+ 
+#Listas del programa (se mantienen "paralelas": misma posicion = misma persona / mismo gasto)
+nombres = []            #nombres de las personas registradas
+balances = []           #balances[i] es el balance de nombres[i]
+montos_gastos = []      #monto de cada gasto registrado
+pagadores_gastos = []   #quien pago cada gasto
+ 
 salir = False
-total_gastado = 0
-cantidad_gastos = 0
-balance_persona = 0
-
+ 
 while not salir:
     opcion = mostrar_menu()
-
+ 
     if opcion == "1":
         monto_total = pedir_monto_total()
-        cantidad_de_participantes = pedir_participantes()
-        monto_individual = calcular_monto_individual(monto_total, cantidad_de_participantes)
-        print("El monto individual es: ", monto_individual)
-        balance_persona_que_pago = calcular_balance_persona_que_pago(monto_total, monto_individual)
-        print("El balance de la persona que pagó es: ", balance_persona_que_pago)
-        balance_persona = calcular_balance_persona(balance_persona, monto_individual)
-        print("El balance de los demas es: ", balance_persona)
-        total_gastado,cantidad_gastos = acumular_gastos(total_gastado,cantidad_gastos,monto_total)
-        print("Gastos registrados hasta ahora: " ,cantidad_gastos)
-        print("Gasto total acumulado: ",total_gastado)
-
+        participantes = pedir_participantes()
+        pagador = quien_pago(participantes)
+        monto_individual = calcular_monto_individual(monto_total, len(participantes))
+        print("El monto individual es: ", redondear_a_2_decimales(monto_individual))
+        actualizar_balances(nombres, balances, participantes, pagador, monto_total, monto_individual)
+        acumular_gastos(montos_gastos, pagadores_gastos, monto_total, pagador)
+        print("Gasto registrado correctamente.")
+ 
     elif opcion == "2":
+        mostrar_balances(nombres, balances)
+ 
+    elif opcion == "3":
+        mostrar_historial(montos_gastos, pagadores_gastos)
+ 
+    elif opcion == "4":
         salir = True
         print("Saliendo del programa")
+ 
     else:
         print("Opcion no valida, intente de nuevo")
