@@ -58,46 +58,50 @@ def quien_pago(participantes):
         pagador = input("Quién pagó? ")
     return pagador
  
-def obtener_indice_persona(nombres, balances, nombre):
+def obtener_indice_persona(personas, nombre):
     #Busca a la persona en la lista de nombres. Si es nueva, la agrega con balance 0.
-    if nombre not in nombres:
-        nombres.append(nombre)
-        balances.append(0)
-    return nombres.index(nombre)
+    for i in range(len(personas)):
+        if personas[i][0] == nombre:
+            return i
+    personas.append([nombre, 0])
+    return len(personas) - 1
  
-def actualizar_balances(nombres, balances, participantes, pagador, monto_total, monto_individual):
+
+ 
+def actualizar_balances(personas, participantes, pagador, monto_total, monto_individual):
     #Recorre a los participantes y actualiza el balance de cada uno en la lista.
     for persona in participantes:
-        i = obtener_indice_persona(nombres, balances, persona)
+        i = obtener_indice_persona(personas, persona)
         if persona == pagador:
-            balances[i] = calcular_balance_persona_que_pago(balances[i], monto_total, monto_individual)
+            personas[i][1] = calcular_balance_persona_que_pago(personas[i][1], monto_total, monto_individual)
         else:
-            balances[i] = calcular_balance_persona(balances[i], monto_individual)
+            personas[i][1] = calcular_balance_persona(personas[i][1], monto_individual)
  
-def acumular_gastos(montos_gastos, pagadores_gastos, monto_total, pagador):
+def acumular_gastos(montos_gastos, pagadores_gastos, participantes_gastos, monto_total, pagador, participantes):
     #Guarda el gasto en las listas del historial.
     montos_gastos.append(monto_total)
     pagadores_gastos.append(pagador)
+    participantes_gastos.append(participantes)
  
 def redondear_a_2_decimales(valor):
     #Deja el numero con 2 decimales.
     return int(valor * 100 + 0.5) / 100
  
-def mostrar_balances(nombres, balances):
+def mostrar_balances(personas):
     #Muestra el balance de cada persona registrada.
-    if len(nombres) == 0:
+    if len(personas) == 0:
         print("Todavía no hay personas registradas.")
         return
     print("\n--- Balances ---")
-    for i in range(len(nombres)):
-        if balances[i] > 0:
-            print(nombres[i], ": le deben $", redondear_a_2_decimales(balances[i]))
-        elif balances[i] < 0:
-            print(nombres[i], ": debe $", redondear_a_2_decimales(-balances[i]))
+    for nombre, balance in personas:
+        if balance > 0:
+            print(nombre, ": le deben $", redondear_a_2_decimales(balance))
+        elif balance < 0:
+            print(nombre, ": debe $", redondear_a_2_decimales(-balance))
         else:
-            print(nombres[i], ": está a mano")
+            print(nombre, ": está a mano")
  
-def mostrar_historial(montos_gastos, pagadores_gastos):
+def mostrar_historial(montos_gastos, pagadores_gastos, participantes_gastos):
     #Muestra todos los gastos registrados.
     if len(montos_gastos) == 0:
         print("Todavía no hay gastos registrados.")
@@ -105,15 +109,18 @@ def mostrar_historial(montos_gastos, pagadores_gastos):
     print("\n--- Historial de gastos ---")
     for i in range(len(montos_gastos)):
         print("Gasto", i + 1, "- Pagó:", pagadores_gastos[i], "- Monto: $", montos_gastos[i])
+        print("Participantes: ", participantes_gastos[i])
+        for persona in participantes_gastos[i]:
+            print("   -", persona)
     print("Cantidad de gastos:", len(montos_gastos))
     print("Gasto total acumulado: $", sum(montos_gastos))
  
  
 #Listas del programa (se mantienen "paralelas": misma posicion = misma persona / mismo gasto)
-nombres = []            #nombres de las personas registradas
-balances = []           #balances[i] es el balance de nombres[i]
+personas = []
 montos_gastos = []      #monto de cada gasto registrado
 pagadores_gastos = []   #quien pago cada gasto
+participantes_gastos = [] #es la lista de los participantes del gasto i 
  
 salir = False
  
@@ -126,15 +133,15 @@ while not salir:
         pagador = quien_pago(participantes)
         monto_individual = calcular_monto_individual(monto_total, len(participantes))
         print("El monto individual es: ", redondear_a_2_decimales(monto_individual))
-        actualizar_balances(nombres, balances, participantes, pagador, monto_total, monto_individual)
-        acumular_gastos(montos_gastos, pagadores_gastos, monto_total, pagador)
+        actualizar_balances(personas, participantes, pagador, monto_total, monto_individual)
+        acumular_gastos(montos_gastos, pagadores_gastos,participantes_gastos, monto_total, pagador, participantes)
         print("Gasto registrado correctamente.")
  
     elif opcion == "2":
-        mostrar_balances(nombres, balances)
+        mostrar_balances(personas)
  
     elif opcion == "3":
-        mostrar_historial(montos_gastos, pagadores_gastos)
+        mostrar_historial(montos_gastos, pagadores_gastos, participantes_gastos)
  
     elif opcion == "4":
         salir = True
